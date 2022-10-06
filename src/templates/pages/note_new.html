@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block subtitle%}
+<br><h4>NoteBook</h4><br>
+{% endblock %}
+
+{% block content %}
+<h1 align="center">New Note</h1>
+<div class="container">
+    <div class="row justify-content-center mb-3">
+    </div>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    {% for category, message in messages %}
+    {% if category == 'success' %}
+    <div class="alert alert-success">{{message}}</div>
+    {% endif %}
+    {% if category == 'danger' %}
+    <div class="alert alert-danger">{{message}}</div>
+    {% endif %}
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+    <div class="row justify-content-center">
+        <form class="col-sm-10" action="/notebook/new" method="post">
+
+            <div class="form-group">
+                <div class="input-group flex-nowrap">
+                    <span class="input-group-text" id="addon-wrapping">Enter note: </span>
+                    <input
+                            type="text"
+                            class="form-control"
+                            placeholder="Note text"
+                            aria-label="Note text"
+                            aria-describedby="addon-wrapping"
+                            name="note_text"
+                    >
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="input-group flex-nowrap">
+                    <span class="input-group-text" id="addon-wrapping">Enter tags: </span>
+                    <input
+                            type="text"
+                            class="form-control"
+                            placeholder="Note tags"
+                            aria-label="Note tags"
+                            aria-describedby="addon-wrapping"
+                            name="note_tags"
+                    >
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="input-group flex-nowrap">
+                    <span class="input-group-text" id="addon-wrapping">Enter Execution Date: </span>
+                    <input
+                            type="date"
+                            class="form-control"
+                            placeholder="Execution Date"
+                            aria-label="Execution Date"
+                            aria-describedby="addon-wrapping"
+                            name="exec_date"
+                    >
+                </div>
+            </div>
+
+            <div class="form-group">
+                <button class="btn btn-primary col-sm-12" type="submit">
+                    Add Note
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

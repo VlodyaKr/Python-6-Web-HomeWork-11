@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block subtitle%}
+<br><h4>Assistant</h4><br>
+{% endblock %}
+
+
+{% block content %}
+<h1 align="center">Hello Friend!</h1>
+<p>
+    This program has three modules: <b>addressbook</b>, <b>notebook</b> and <b>file parser</b>.
+</p>
+<p>
+    <a href="/addressbook/list"><b>AddressBook</b></a> - to add, change, delete, clear adressbook
+</p>
+<p>
+    <a href="/notebook/list"><b>NoteBook</b></a> - to add, change, delete, clear notebook
+</p>
+<p>
+    <a href="/file_parser"><b>File Parser</b></a> - to sort files with different extensions by folders
+</p>
+{% endblock %}

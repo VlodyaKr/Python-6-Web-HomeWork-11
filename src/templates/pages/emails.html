@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block subtitle%}
+<br><h4>AddressBook</h4><br>
+{% endblock %}
+
+{% block content %}
+<h1 align="center">Edit Emails</h1>
+<div class="container">
+    <div class="row justify-content-center mb-3">
+    </div>
+    {%if messages%}
+    {% for message in messages %}
+    <div class="alert alert-danger">{{message}}: {{messages[message]}}</div>
+    {% endfor %}
+    {% endif %}
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    {% for category, message in messages %}
+    {% if category == 'success' %}
+    <div class="alert alert-success">{{message}}</div>
+    {% endif %}
+    {% if category == 'danger' %}
+    <div class="alert alert-danger">{{message}}</div>
+    {% endif %}
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+    <div class="row justify-content-center">
+        <form class="col-sm-10" action="/addressbook/emails/{{ contact.id }}" method="post">
+
+            {% for email in emails %}
+            <div class="form-group">
+                <div class="input-group flex-nowrap">
+                    <span class="input-group-text" id="addon-wrapping">Email: </span>
+                    <input
+                            type="text"
+                            class="form-control"
+                            placeholder="Email"
+                            aria-label="Email"
+                            aria-describedby="addon-wrapping"
+                            name="email-{{ email.id }}"
+                            value="{{ email.mail }}"
+                    >
+                    <button type="submit" value="{{ email.id }}" name="subbutton"
+                            class="btn btn-outline-primary">&nbsp;&nbsp;Edit&nbsp;&nbsp;
+                    </button>
+                    <button type="button"
+                            onclick="window.location.href='{{ url_for('del_email', email_id = email.id) }}';"
+                            class="btn btn-outline-danger">&nbsp;&nbsp;Delete&nbsp;&nbsp;
+                    </button>
+                </div>
+            </div>
+            {% endfor %}
+
+            <div class="form-group">
+                <div class="input-group flex-nowrap">
+                    <span class="input-group-text" id="addon-wrapping">New Email: </span>
+                    <input
+                            type="text"
+                            class="form-control"
+                            placeholder="Email"
+                            aria-label="Email"
+                            aria-describedby="addon-wrapping"
+                            name="email-0"
+                            value="{{new_email}}"
+                    >
+                    <button type="submit" value="0" name="subbutton"
+                            class="btn btn-outline-success">&nbsp;&nbsp;Add&nbsp;&nbsp;
+                    </button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <button class="btn btn-primary col-sm-12" type="button"
+                        onclick="window.location.href='{{ url_for('edit_contact', contact_id = contact.id) }}';">
+                    Close
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
+

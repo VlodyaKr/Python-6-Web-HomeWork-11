@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block subtitle%}
+<br><h4>NoteBook</h4><br>
+{% endblock %}
+
+{% block app_note_menu %}
+<hr class="hr-double">
+<ul class="nav nav-pills flex-column">
+    <li class="nav-item">
+        <a class="nav-link" href="/notebook/new">New Note</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/notebook/show_archived">Show Archive</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/notebook/show_date">Find Date</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/notebook/find_text">Find Note</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/notebook/find_tag">Find Tag</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/notebook/sort_tags">Sort By Tags</a>
+    </li>
+</ul>
+
+{% endblock %}
+
+{% block content %}
+<h1 align="center">{{title}}</h1>
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+{% for category, message in messages %}
+{% if category == 'success' %}
+<div class="alert alert-success">{{message}}</div>
+{% endif %}
+{% if category == 'danger' %}
+<div class="alert alert-danger">{{message}}</div>
+{% endif %}
+{% endfor %}
+{% endif %}
+{% endwith %}
+
+
+{% for note in view_list %}
+<form method="POST">
+    <div class="accordion" id="accordionExample">
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="heading-{{ note.id }}">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-parent="#accordion"
+                        data-bs-target="#collapse-{{ note.id }}" aria-expanded="false"
+                        aria-controls="collapse-{{ note.id }}">
+                    Node ID:{{ note.id }}
+                </button>
+            </h2>
+
+            <div id="collapse-{{ note.id }}" class="accordion-collapse collapse show"
+                 aria-labelledby="heading-{{ note.id }}"
+                 data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                    <p> {{ note.text }}</p>
+                    {% if note.tags %}
+                    <p><strong>Tags:</strong> {{ note.tags|map(attribute='tag')|sort()|join(' ') }} </p>
+                    {% endif %}
+                    {% if note.execution_date %}
+                    <p><strong>Execute date:</strong> {{ note.execution_date.strftime('%d %b %Y') }} </p>
+                    {% endif %}
+                    <div class="btn-group btn-group-sm" role="group" aria-label="Operation">
+                        <button type="button"
+                                onclick="window.location.href='{{ url_for('edit_note', note_id = note.id) }}';"
+                                class="btn btn-outline-primary">Edit
+                        </button>
+                        <button type="button"
+                                onclick="window.location.href='{{ url_for('del_note', note_id = note.id) }}';"
+                                class="btn btn-outline-danger">Delete
+                        </button>
+                        <button type="button"
+                                onclick="window.location.href='/notebook/archive/{{note.id}}'"
+                                class="btn btn-outline-warning">
+                            {% if note.is_done %}
+                            Activate
+                            {% else %}
+                            Archive
+                            {% endif %}
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+{% endfor %}
+{% endblock %}
+

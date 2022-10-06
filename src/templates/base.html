@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>
+        Assistant - {{title}}
+    </title>
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT"
+          crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8"
+            crossorigin="anonymous">
+    </script>
+
+</head>
+<body>
+<div class="row" style="max-width: 100%;">
+    <div class="sidebar col-lg-2 sticky-top">
+        <img class="rounded img-fluid" src="{{ url_for('static', filename='assistant.png') }}" alt="Assistant">
+        <div id="subtitle">
+            {% block subtitle %}
+            {% endblock %}
+        </div>
+        <ul class="nav nav-pills flex-column">
+            <li class="nav-item">
+                <a class="nav-link" href="/">Home</a>
+            </li>
+            {% if auth %}
+            <li class="nav-item">
+                <a class="nav-link" href="/addressbook/list">AddressBook</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/notebook/list">NoteBook</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/file_parser">File Parser</a>
+            </li>
+        </ul>
+        <hr class="hr-double">
+        <ul class="nav nav-pills flex-column">
+            <li class="nav-item">
+                <a class="nav-link" href="/logout">Sign Out</a>
+            </li>
+            {% else %}
+            <li class="nav-item">
+                <a class="nav-link" href="/registration">Sign Up</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/login">Sign In</a>
+            </li>
+            {% endif %}
+        </ul>
+        {% block app_note_menu %}
+        {% endblock %}
+    </div>
+    <div class="main col-lg-10 col-md-9">
+        {% block content %}
+        {% endblock %}
+    </div>
+</div>
+<footer class="footer fixed-bottom">
+    <div class="container">
+        Copyright © 2022 by <a href="mailto:vlodya@gmail.com">Volodymyr Kravchenko</a>.
+    </div>
+</footer>
+</body>
+</html>

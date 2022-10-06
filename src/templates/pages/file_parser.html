@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block subtitle%}
+<br><h4>File Parser</h4><br>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center mb-2">
+        <h1 align="center">File Parser</h1>
+    </div>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    {% for category, message in messages %}
+    {% if category == 'success' %}
+    <div class="alert alert-success">{{message}}</div>
+    {% endif %}
+    {% if category == 'danger' %}
+    <div class="alert alert-danger">{{message}}</div>
+    {% endif %}
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+    <form
+            class="col-sm-12"
+            action="/file_parser"
+            method="post"
+            enctype="multipart/form-data">
+
+        <div class="input-group flex-nowrap">
+            <span class="input-group-text" id="addon-wrapping">Введіть теку: </span>
+            <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Тека"
+                    aria-label="Тека"
+                    aria-describedby="addon-wrapping"
+                    name="folder"
+            >
+        </div>
+        <br>
+        <div class="form-group">
+            <button class="btn btn-primary col-sm-12" type="submit">
+                Parsing
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

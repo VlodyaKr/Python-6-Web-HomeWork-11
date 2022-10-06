@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block subtitle%}
+<br><h4>AddressBook</h4><br>
+{% endblock %}
+
+{% block content %}
+<h1 align="center">Delete Phone</h1>
+<div class="container">
+    <div class="row justify-content-center mb-3">
+    </div>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    {% for category, message in messages %}
+    {% if category == 'success' %}
+    <div class="alert alert-success">{{message}}</div>
+    {% endif %}
+    {% if category == 'danger' %}
+    <div class="alert alert-danger">{{message}}</div>
+    {% endif %}
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+    <div class="row justify-content-center">
+        <form class="col-sm-10" action="/addressbook/phone_del/{{phone.id}}" method="post">
+            <div class="form-group">
+                <div class="input-group flex-nowrap">
+                    <span class="input-group-text" id="addon-wrapping">Phone: </span>
+                    <input
+                            type="text"
+                            class="form-control"
+                            value="{{phone.phone_number}}"
+                            aria-describedby="addon-wrapping"
+                            name="note_text"
+                            disabled="true"
+                    >
+                </div>
+            </div>
+
+            <div class="btn-group btn-group-sm" role="group" aria-label="YesNo">
+                <button class="btn btn-outline-danger col-sm-1" type="submit">
+                    Delete Phone
+                </button>
+                <button class="btn btn-outline-primary col-sm-1" type="button" onclick="window.history.back();">
+                    Cancel
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
