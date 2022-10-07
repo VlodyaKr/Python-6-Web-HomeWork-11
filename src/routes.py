@@ -242,20 +242,6 @@ def notebook_sort_tags():
     return render_template('pages/notebook.html', title='Sorted By Tags', auth=auth, view_list=notes)
 
 
-@app.route('/addressbook/list', methods=['GET', 'POST'], strict_slashes=False)
-def addressbook_list():
-    auth = True if 'username' in session else False
-    if not auth:
-        return redirect(url_for('index'))
-    ab = addressbook.show_all()
-    if request.method == 'POST':
-        contact_id = int(request.form.get('bdbutton'))
-        contact = db.session.query(models.Contact).filter(models.Contact.id == contact_id).first()
-        flash(f'{contact.days_to_birthday} days to Birthday of {contact.name}', 'warning')
-        return redirect(url_for('addressbook_list'))
-    return render_template('pages/addressbook.html', title='AddressBook', auth=auth, view_list=ab)
-
-
 @app.route('/addressbook/new', methods=['GET', 'POST'], strict_slashes=False)
 def add_contact():
     auth = True if 'username' in session else False
@@ -327,14 +313,12 @@ def edit_phones(contact_id):
         if not new_phone:
             flash('Phone number is empty.', 'danger')
             return render_template('pages/phones.html', title='Edit Phones', auth=auth, contact=contact, phones=phones)
-        print('*****', phone_id, new_phone)
         try:
             new_phone = ContactSchema()._phone_check(new_phone)
         except ValidationError as err:
             return render_template('pages/phones.html', messages=err.messages, title='Edit Phones', auth=auth,
                                    contact=contact, phones=phones)
 
-        print(phone_id, new_phone)
         result, message = addressbook.edit_phone(phone_id, new_phone, contact_id)
         if result:
             flash(message, 'success')
@@ -428,9 +412,16 @@ def addressbook_find():
         return redirect(url_for('index'))
     if request.method == 'POST':
         find_text = request.form.get('text')
-        contacts = addressbook.find(find_text)
-        return render_template('pages/addressbook.html', title=f'Search by "{find_text.lower()}"', auth=auth,
+        if request.form.get('bdbutton'):
+            contact_id = int(request.form.get('bdbutton'))
+            bdcontact = db.session.query(models.Contact).filter(models.Contact.id == contact_id).first()
+            flash(f'{bdcontact.days_to_birthday} days to Birthday of {bdcontact.name}', 'warning')
+        if find_text:
+            contacts = addressbook.find(find_text)
+            return render_template('pages/addressbook.html', title=f'Search by "{find_text.lower()}"', auth=auth,
                                view_list=contacts)
+        else:
+            return redirect(url_for('addressbook_list'))
     return render_template('pages/contact_find.html', title='Find', auth=auth)
 
 
@@ -440,8 +431,22 @@ def addressbook_birthdays():
     if not auth:
         return redirect(url_for('index'))
     if request.method == 'POST':
-        find_days = int(request.form.get('days'))
+        find_days = int(request.form.get('days').encode())
         contacts = addressbook.birthdays(find_days)
         return render_template('pages/addressbook.html', title=f'Search by "{find_days} days to Birthday"', auth=auth,
                                view_list=contacts)
     return render_template('pages/contact_bitrhdays.html', title='Find Birthdays', auth=auth)
+
+
+@app.route('/addressbook/list', methods=['GET', 'POST'], strict_slashes=False)
+def addressbook_list():
+    auth = True if 'username' in session else False
+    if not auth:
+        return redirect(url_for('index'))
+    contact_list = addressbook.show_all()
+    if request.method == 'POST':
+        contact_id = int(request.form.get('bdbutton'))
+        contact = db.session.query(models.Contact).filter(models.Contact.id == contact_id).first()
+        flash(f'{contact.days_to_birthday} days to Birthday of {contact.name}', 'warning')
+        return redirect(url_for('addressbook_list'))
+    return render_template('pages/addressbook.html', title='AddressBook', auth=auth, view_list=contact_list)
